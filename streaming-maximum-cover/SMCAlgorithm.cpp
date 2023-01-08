@@ -1,0 +1,174 @@
+#include "SMCAlgorithm.hpp"
+
+using namespace smc;
+
+Algorithm::Algorithm()
+{
+    
+}
+
+Result Algorithm::run()
+{
+    auto Tstart = high_resolution_clock::now();
+    
+    Result result;
+    
+    int lambda = c * float(k) * std::log(m) / (epsilon * epsilon);
+    int gamma;
+    switch (inde) {
+        case IndeType::FULL:
+            gamma = std::ceil(2.f * c * float(k) * std::log(m) / (epsilon * epsilon));
+            result.inde = "full";
+            break;
+            
+        case IndeType::OPT:
+            gamma = std::ceil(c * float(k) * std::log(m) / 3.f);
+            result.inde = "opt";
+            break;
+            
+        case IndeType::PAIRWISE:
+            gamma = 2;
+            result.inde = "pairwise";
+            break;
+            
+        case IndeType::FULLSAMP:
+            gamma = 0;
+            result.inde = "fullsamp";
+            break;
+            
+        default:
+            gamma = 0;
+            result.inde = "fullsamp";
+            break;
+    }
+    result.gamma = gamma;
+    IndeHashFunction hash(gamma);
+    int activity = 0;
+    
+    /*
+     Set guesses
+     */
+    std::vector<GuessState> guess_states;
+    int v = max_set_size/2;
+    while (v <= max_set_size*k && v <= n)
+    {
+        guess_states.push_back(GuessState());
+        guess_states.back().v = v;
+        activity++;
+        result.n_guesses++;
+        
+        v *= 2;
+    }
+    
+    for (GuessState& state : guess_states)
+    {
+        state.active = true;
+        state.wrong = false;
+        state.n_elements = 0;
+        state.lambda = c * float(k) * std::log(m) / (epsilon * epsilon);
+        if (inde == IndeType::FULLSAMP || state.lambda > state.v) state.lambda = state.v;
+
+        state.z = 2.f * (1.f + epsilon) * state.lambda;
+        state.threshold = state.z / float(k);
+        
+        state.I.clear();
+        state.C.clear();
+    }
+    
+    /*
+     Thresholding
+     */
+    int j_max = 1 + std::ceil(std::log(4.f * M_E) / std::log(1.f + epsilon));
+    for (int j = 1; activity > 0 && j <= j_max; j++)
+    {
+        result.n_passes++;
+        
+        stream->reset();
+        int id;
+        std::vector<unsigned long> set;
+        while (activity > 0 && stream->read_set(id, set))
+        {
+            if (inde != IndeType::FULLSAMP)
+            {
+                auto T1 = high_resolution_clock::now();
+                hash.pre_evaluate(set);
+                auto T2 = high_resolution_clock::now();
+                result.time_sub += T2 - T1;
+            }
+
+            // Iterate over guesses
+            for (GuessState& state : guess_states) if (state.active && !state.I.contains(id))
+            {
+                // Calculate S\C
+                std::vector<unsigned long> sub_set;
+                if (state.lambda < state.v)
+                {
+                    for (int i = 0; i < set.size(); i++) if (!state.C.contains(set[i]))
+                    {
+                        auto T1 = high_resolution_clock::now();
+                        unsigned long hx = hash.post_evaluate(i);
+                        if ((hx % state.v) < lambda) sub_set.push_back(set[i]);
+                        auto T2 = high_resolution_clock::now();
+                        
+                        result.time_sub += T2 - T1;
+                    }
+                }
+                else for (unsigned long x : set) if (!state.C.contains(x)) sub_set.push_back(x);
+                
+                // Check contribution
+                if (sub_set.size() >= state.threshold && state.I.size() < k)
+                {
+                    state.I.insert(id);
+                    for (unsigned long x : sub_set) state.C.insert(x);
+                }
+                
+                // Termination conditions
+                if (state.C.size() > state.z)
+                {
+                    state.wrong = true;
+                    state.active = false;
+                    activity--;
+                }
+                else if (state.I.size() >= k)
+                {
+                    state.active = false;
+                    activity--;
+                }
+            }
+        }
+        
+        for (GuessState& state : guess_states) state.threshold /= 1.f + epsilon;
+    }
+    
+    // Find right guess
+    for (GuessState& state : guess_states) if (state.C.size() < (1.f - epsilon)*(1-1/M_E-epsilon)*state.lambda) state.wrong = true;
+    
+    int max_i = (int)guess_states.size()-1;
+    while (guess_states[max_i].wrong) max_i--;
+    
+    auto Tend = high_resolution_clock::now();
+    
+    GuessState state = guess_states[max_i];
+    std::set<unsigned long> true_C;
+    
+    if (gamma >= 2)
+    {
+        stream->reset();
+        
+        std::vector<unsigned long> set;
+        int id;
+        while (stream->read_set(id, set)) if (state.I.contains(id)) true_C.insert(set.begin(), set.end());
+    }
+    else true_C.insert(state.C.begin(), state.C.end());
+    stream->terminate();
+
+    result.indices.clear();
+    for (int x : guess_states[max_i].I) result.indices.push_back(x);
+    result.coverage_size = (int)true_C.size();
+    result.lambda = state.lambda;
+    result.time_tot = Tend - Tstart;
+    result.space = 0;
+    for (const GuessState& state : guess_states) result.space += state.C.size();
+    
+    return result;
+}
