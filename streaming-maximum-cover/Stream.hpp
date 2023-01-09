@@ -5,27 +5,31 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <iostream>
 
 #include <fcntl.h> 
 #include <unistd.h>
 #include <cstring>
 
+struct Info {
+    std::string name;
+    long size;
+    int m;
+    int n;
+    int max_set_size;
+};
+
 class Stream
 {
 public:
-    virtual bool read_set(int& id, std::vector<unsigned long>& set) = 0;
-    virtual void reset() = 0;
-    virtual void terminate() = 0;
-};
-
-class RealStream : public Stream
-{
-public:
-    RealStream(const std::string& path, const std::string& dataset);
+    Stream(const std::string& path, const std::string& dataset);
     
     bool read_set(int& id, std::vector<unsigned long>& set);
     void reset();
     void terminate();
+    
+    static std::unordered_map<std::string, Info> load_infos(const std::string& path);
     
 private:
     int current_id;

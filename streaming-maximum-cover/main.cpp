@@ -4,15 +4,6 @@
 
 #include "SMCAlgorithm.hpp"
 
-
-struct Info {
-    std::string name;
-    long size;
-    int m;
-    int n;
-    int max_set_size;
-};
-
 /*
  ./program real <path> <dataset> <k> <eps> <inde>
  ./program gen <type> <k> <eps> <inde>
@@ -56,21 +47,12 @@ int main(int argc, const char * argv[]) {
         dataset = "Webdocs.dat";
         k       = 2;
         eps     = 0.4f;
-        inde    = "full";
+        inde    = "pairwise";
     }
-    
-    RealStream stream(path, dataset);
-    
-    std::unordered_map<std::string, Info> dataset_infos;
-    dataset_infos["chess.dat"]          = {"chess.dat",         330970,         3196,       75,         37};
-    dataset_infos["mushroom.dat"]       = {"mushroom.dat",      528190,         8124,       119,        23};
-    dataset_infos["pumsb_star.dat"]     = {"pumsb_star.dat",    8343542,        49046,      2088,       76};
-    dataset_infos["Accidents.dat"]      = {"Accidents.dat",     34946269,       340183,     468,        51};
-    dataset_infos["Patents.dat"]        = {"Patents.dat",       124386653,      2089345,    3258983,    770};
-    dataset_infos["Webdocs.dat"]        = {"Webdocs.dat",       1481705359,     1692082,    5267656,    71472};
-    dataset_infos["Webbase.dat"]        = {"Webbase.dat",       5983780218,     56998289,   112195266,  3841};
-    dataset_infos["SocialNetwork.dat"]  = {"SocialNetwork.dat", 15640890842,    37551359,   64961029,   3615};
-    dataset_infos["UKUnion.dat"]        = {"UKUnion.dat",       29792226977,    74117320,   126454248l, 22429};
+        
+    std::unordered_map<std::string, Info> dataset_infos = Stream::load_infos(path);
+        
+    Stream stream(path, dataset);
     
     smc::Algorithm smc_algo;
     smc_algo.setStream(&stream);
@@ -83,6 +65,7 @@ int main(int argc, const char * argv[]) {
     if      (inde == "full")        smc_algo.setInde(smc::IndeType::FULL);
     else if (inde == "opt")         smc_algo.setInde(smc::IndeType::OPT);
     else if (inde == "pairwise")    smc_algo.setInde(smc::IndeType::PAIRWISE);
+    else if (inde == "fullsamp")    smc_algo.setInde(smc::IndeType::FULLSAMP);
     else                            smc_algo.setInde(smc::IndeType::FULLSAMP);
     
     smc::Result result = smc_algo.run();

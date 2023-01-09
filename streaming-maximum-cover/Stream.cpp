@@ -1,6 +1,28 @@
 #include "Stream.hpp"
 
-RealStream::RealStream(const std::string& path, const std::string& dataset)
+std::unordered_map<std::string, Info> Stream::load_infos(const std::string& path)
+{
+    std::unordered_map<std::string, Info> dataset_infos;
+    
+    std::ifstream file_infos(path + "dataset_infos.txt");
+    
+    std::string line;
+    std::getline(file_infos, line);
+    
+    while (std::getline(file_infos, line))
+    {
+        std::istringstream streamline(line);
+        std::string name;
+        long size;
+        int m, n, max;
+        streamline >> name >> size >> m >> n >> max;
+        dataset_infos[name] = {name, size, m, n, max};
+    }
+    
+    return dataset_infos;
+}
+
+Stream::Stream(const std::string& path, const std::string& dataset)
 {
     fd = open((path + dataset).c_str(), O_RDONLY);
     
@@ -10,7 +32,7 @@ RealStream::RealStream(const std::string& path, const std::string& dataset)
     current_id = 0;
 }
 
-bool RealStream::read_set(int &id, std::vector<unsigned long>& set)
+bool Stream::read_set(int &id, std::vector<unsigned long>& set)
 {
     id = current_id++;
     
@@ -48,7 +70,7 @@ bool RealStream::read_set(int &id, std::vector<unsigned long>& set)
     return true;
 }
 
-void RealStream::reset()
+void Stream::reset()
 {
     lseek(fd, 0, SEEK_SET);
     
@@ -58,7 +80,7 @@ void RealStream::reset()
     current_id = 0;
 }
 
-void RealStream::terminate()
+void Stream::terminate()
 {
     close(fd);
 }
