@@ -5,12 +5,11 @@
 #include "SMCAlgorithm.hpp"
 
 /*
- ./program real <path> <dataset> <k> <eps> <inde>
- ./program gen <type> <k> <eps> <inde>
+ ./program <path> <dataset> <k> <eps> <inde>
  
     <k>     int     number of sets to select
     <eps>   float   precision parameter
-    <inde>  string  "full", "opt", "2"
+    <inde>  string  "full", "opt", "pairwise"
  */
 
 int main(int argc, const char * argv[]) {
@@ -19,32 +18,18 @@ int main(int argc, const char * argv[]) {
     float eps;
     std::string inde;
         
-    if (argc == 7)
+    if (argc == 6)
     {
-        if (std::string(argv[1]) == "real")
-        {
-            path    = std::string(argv[2]);
-            dataset = std::string(argv[3]);
-            k       = atoi(argv[4]);
-            eps     = atof(argv[5]);
-            inde    = std::string(argv[6]);
-        }
-        else if (std::string(argv[1]) == "gen")
-        {
-            std::cout << "gen option not implemented" << std::endl;
-            return 0;
-        }
-        else
-        {
-            std::cout << "Unknown option used" << std::endl;
-            return 0;
-        }
+        path    = std::string(argv[1]);
+        dataset = std::string(argv[2]);
+        k       = atoi(argv[3]);
+        eps     = atof(argv[4]);
+        inde    = std::string(argv[5]);
     }
-    // Default options
     else
     {
         path    = "/Users/stephen/Desktop/Melbourne University/Subjects/S4 - Research Project/Datasets/Datasets/";
-        dataset = "Webdocs.dat";
+        dataset = "chess.dat";
         k       = 2;
         eps     = 0.4f;
         inde    = "pairwise";
@@ -76,9 +61,7 @@ int main(int argc, const char * argv[]) {
                     eps                         << "," <<
                     result                      << "," <<
                     dataset                     << std::endl;
-    
-    std::cout << result.coverage_size << std::endl;
-     
+         
     stream.terminate();
     
     return 0;
