@@ -28,7 +28,7 @@ int main(int argc, const char * argv[]) {
     }
     else
     {
-        path    = "/Users/stephen/Desktop/Melbourne University/Subjects/S4\ -\ Research\ Project/Datasets/Datasets/";
+        path    = "/Users/stephen/Desktop/Melbourne University/Subjects/S4 - Research Project/Datasets/Datasets/";
         dataset = "pumsb_star.dat";
         k       = 2;
         eps     = .4f;
