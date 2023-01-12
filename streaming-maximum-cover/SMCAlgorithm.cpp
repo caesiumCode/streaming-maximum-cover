@@ -107,7 +107,7 @@ Result Algorithm::run()
                     {
                         auto T1 = high_resolution_clock::now();
                         unsigned long hx = hash.post_evaluate(i);
-                        if ((hx % state.v) < lambda) sub_set.push_back(set[i]);
+                        if ((hx % state.v) < state.lambda) sub_set.push_back(set[i]);
                         auto T2 = high_resolution_clock::now();
                         
                         result.time_sub += T2 - T1;
@@ -140,15 +140,25 @@ Result Algorithm::run()
         for (GuessState& state : guess_states) state.threshold /= 1.f + epsilon;
     }
     
+    // Fisrt estimate
+    GuessState tmp_right_state = guess_states[0];
+    for (GuessState& state : guess_states) if (tmp_right_state.wrong ||
+                                               (!state.wrong && double(state.C.size()) * double(state.v) / double(state.lambda) >
+                                               double(tmp_right_state.C.size()) * double(tmp_right_state.v) / double(tmp_right_state.lambda)))
+        tmp_right_state = state;
+    
     // Find right guess
     for (GuessState& state : guess_states) if (state.C.size() < (1.f - epsilon)*(1-1/M_E-epsilon)*state.lambda) state.wrong = true;
     
     int max_i = (int)guess_states.size()-1;
-    while (guess_states[max_i].wrong) max_i--;
+    while (max_i >= 0 && guess_states[max_i].wrong) max_i--;
+    
+    GuessState state;
+    if (max_i < 0) state = tmp_right_state;
+    else state = guess_states[max_i];
     
     auto Tend = high_resolution_clock::now();
-    
-    GuessState state = guess_states[max_i];
+
     std::set<unsigned long> true_C;
     
     if (gamma >= 2)
