@@ -13,16 +13,17 @@ Result Algorithm::run()
     
     Result result;
     
-    int lambda = c * float(k) * std::log(m) / (epsilon * epsilon);
     int gamma;
     switch (inde) {
         case IndeType::FULL:
             gamma = std::ceil(2.f * c * float(k) * std::log(m) / (epsilon * epsilon));
+            gamma = std::max(2, gamma);
             result.inde = "full";
             break;
             
         case IndeType::OPT:
             gamma = std::ceil(c * float(k) * std::log(m) / 3.f);
+            gamma = std::max(2, gamma);
             result.inde = "opt";
             break;
             
