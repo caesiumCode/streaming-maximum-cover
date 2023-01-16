@@ -140,7 +140,9 @@ Result Algorithm::run()
         
         for (GuessState& state : guess_states) state.threshold /= 1.f + epsilon;
     }
-        
+    
+    std::cout << "BEFORE FINDING GUESS\n";
+    
     // Fisrt estimate
     int max_i = 0;
     double max_p = guess_states[max_i].lambda / double(guess_states[max_i].v);
@@ -154,7 +156,9 @@ Result Algorithm::run()
         }
     }
     int fst_max_i = max_i;
-        
+    
+    std::cout << "1/2 FINDING GUESS\n";
+    
     // Find right guess
     for (GuessState& state : guess_states) if (state.C.size() < (1.f - epsilon)*(1-1/M_E-epsilon)*state.lambda) state.wrong = true;
     
@@ -164,7 +168,9 @@ Result Algorithm::run()
     GuessState state;
     if (max_i < 0) state = guess_states[fst_max_i];
     else state = guess_states[max_i];
-        
+    
+    std::cout << "AFTER FINDING GUESS\n";
+    
     auto Tend = high_resolution_clock::now();
 
     std::set<unsigned long> true_C;
