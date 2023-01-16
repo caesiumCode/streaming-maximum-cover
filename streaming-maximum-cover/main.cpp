@@ -12,9 +12,7 @@
     <inde>  string  "full", "opt", "pairwise"
  */
 
-int main(int argc, const char * argv[]) {
-    std::cout << "START\n";
-    
+int main(int argc, const char * argv[]) {    
     std::string path, dataset, type;
     int k;
     float eps;
@@ -37,12 +35,9 @@ int main(int argc, const char * argv[]) {
         inde    = "opt";
     }
     
-    std::cout << "BEFORE LOAD INFO\n";
     std::unordered_map<std::string, Info> dataset_infos = Stream::load_infos(path);
     
-    std::cout << "BEFORE STREAM INIT\n";
     Stream stream(path, dataset);
-    std::cout << "AFTER STREAM INIT\n";
     
     smc::Algorithm smc_algo;
     smc_algo.setStream(&stream);
@@ -60,18 +55,17 @@ int main(int argc, const char * argv[]) {
     
     smc::Result result = smc_algo.run();
     
-    std::cout << "AFTER RUN\n";
-    
-    std::cout <<    dataset_infos[dataset].n    << "," <<
-                    dataset_infos[dataset].m    << "," <<
-                    k                           << "," <<
-                    eps                         << "," <<
-                    result                      << "," <<
-                    dataset                     << std::endl;
+    if (dataset != "chess.dat")
+    {
+        std::cout <<    dataset_infos[dataset].n    << "," <<
+                        dataset_infos[dataset].m    << "," <<
+                        k                           << "," <<
+                        eps                         << "," <<
+                        result                      << "," <<
+                        dataset                     << std::endl;
+    }
          
     stream.terminate();
-    
-    std::cout << "END\n";
-    
+        
     return 0;
 }
