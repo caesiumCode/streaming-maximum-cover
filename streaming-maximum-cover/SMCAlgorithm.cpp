@@ -191,8 +191,6 @@ Result Algorithm::run()
     }
     else true_C.insert(state.C.begin(), state.C.end());
     
-    stream->terminate();
-
     result.indices.clear();
     for (int x : state.I) result.indices.push_back(x);
     result.coverage_size = (int)true_C.size();
