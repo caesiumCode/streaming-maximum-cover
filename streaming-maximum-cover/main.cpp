@@ -13,6 +13,8 @@
  */
 
 int main(int argc, const char * argv[]) {
+    std::cout << "START\n";
+    
     std::string path, dataset, type;
     int k;
     float eps;
@@ -58,6 +60,8 @@ int main(int argc, const char * argv[]) {
     
     smc::Result result = smc_algo.run();
     
+    std::cout << "AFTER RUN\n";
+    
     std::cout <<    dataset_infos[dataset].n    << "," <<
                     dataset_infos[dataset].m    << "," <<
                     k                           << "," <<
@@ -66,6 +70,8 @@ int main(int argc, const char * argv[]) {
                     dataset                     << std::endl;
          
     stream.terminate();
+    
+    std::cout << "END\n";
     
     return 0;
 }
