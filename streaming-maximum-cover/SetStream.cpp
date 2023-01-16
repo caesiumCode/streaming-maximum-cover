@@ -15,6 +15,30 @@ std::vector<std::string> split(std::string s, std::string delimiter) {
     return res;
 }
 
+std::unordered_map<std::string, SetStream::Info> SetStream::load_infos(const std::string& path)
+{
+    std::unordered_map<std::string, Info> dataset_infos;
+    
+    std::ifstream file_infos(path + "dataset_infos.txt");
+    
+    std::string line;
+    std::getline(file_infos, line);
+    
+    while (std::getline(file_infos, line))
+    {
+        std::istringstream streamline(line);
+        std::string name;
+        long size;
+        int m, n, max;
+        streamline >> name >> size >> m >> n >> max;
+        dataset_infos[name] = {name, size, m, n, max};
+    }
+    
+    file_infos.close();
+    
+    return dataset_infos;
+}
+
 SetStream::SetStream(std::string path, std::string name_, char del)
 {
     fildes = open((path+name_).c_str(), O_RDONLY);

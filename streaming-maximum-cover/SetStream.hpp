@@ -12,6 +12,9 @@
 #include <unistd.h> // read
 #include <cstring>  // memchr
 
+#include <fstream>
+#include <sstream>
+
 #include <algorithm>
 #include <numeric>
 #include <unordered_set>
@@ -38,6 +41,8 @@ public:
     bool read_set(int &, std::vector<unsigned long> &);
     std::pair<int, unsigned long> get_m_n();
     Info get_info();
+    
+    static std::unordered_map<std::string, Info> load_infos(const std::string& path);
     
     void reset();
     void terminate();
