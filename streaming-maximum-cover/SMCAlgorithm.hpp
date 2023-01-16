@@ -82,7 +82,7 @@ struct GuessState
     bool wrong;
     long n_elements;
     
-    int v;
+    unsigned long v;
     float lambda;
     float z;
     float threshold;

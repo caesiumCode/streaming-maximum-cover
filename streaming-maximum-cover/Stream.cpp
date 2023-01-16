@@ -19,6 +19,8 @@ std::unordered_map<std::string, Info> Stream::load_infos(const std::string& path
         dataset_infos[name] = {name, size, m, n, max};
     }
     
+    //file_infos.close();
+    
     return dataset_infos;
 }
 

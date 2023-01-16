@@ -46,11 +46,13 @@ Result Algorithm::run()
     IndeHashFunction hash(gamma);
     int activity = 0;
     
+    std::cout << "BEFORE GUESS SET\n";
+    
     /*
      Set guesses
      */
     std::vector<GuessState> guess_states;
-    int v = max_set_size/2;
+    unsigned long v = max_set_size/2;
     while (v <= max_set_size*k && v <= n)
     {
         guess_states.push_back(GuessState());
@@ -60,6 +62,8 @@ Result Algorithm::run()
         
         v *= 2;
     }
+    
+    std::cout << "BEFORE GUESS INIT\n";
     
     for (GuessState& state : guess_states)
     {

@@ -34,10 +34,13 @@ int main(int argc, const char * argv[]) {
         eps     = .4f;
         inde    = "opt";
     }
-        
+    
+    std::cout << "BEFORE LOAD INFO\n";
     std::unordered_map<std::string, Info> dataset_infos = Stream::load_infos(path);
-        
+    
+    std::cout << "BEFORE STREAM INIT\n";
     Stream stream(path, dataset);
+    std::cout << "AFTER STREAM INIT\n";
     
     smc::Algorithm smc_algo;
     smc_algo.setStream(&stream);
