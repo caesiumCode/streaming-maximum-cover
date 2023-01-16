@@ -29,10 +29,10 @@ int main(int argc, const char * argv[]) {
     else
     {
         path    = "/Users/stephen/Desktop/Melbourne University/Subjects/S4 - Research Project/Datasets/Datasets/";
-        dataset = "pumsb_star.dat";
-        k       = 2;
+        dataset = "Webbase.dat";
+        k       = 8;
         eps     = .4f;
-        inde    = "full";
+        inde    = "opt";
     }
         
     std::unordered_map<std::string, Info> dataset_infos = Stream::load_infos(path);
