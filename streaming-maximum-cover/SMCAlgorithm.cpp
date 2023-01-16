@@ -76,6 +76,8 @@ Result Algorithm::run()
         state.C.clear();
     }
     
+    std::cout << "BEFORE MAIN LOOP\n";
+    
     /*
      Thresholding
      */
