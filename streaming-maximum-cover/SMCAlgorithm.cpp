@@ -188,7 +188,7 @@ Result Algorithm::run()
     stream->terminate();
 
     result.indices.clear();
-    for (int x : guess_states[max_i].I) result.indices.push_back(x);
+    for (int x : state.I) result.indices.push_back(x);
     result.coverage_size = (int)true_C.size();
     result.lambda = state.lambda;
     result.time_tot = Tend - Tstart;
