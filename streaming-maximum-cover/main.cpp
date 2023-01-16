@@ -35,18 +35,22 @@ int main(int argc, const char * argv[]) {
         inde    = "opt";
     }
     
-    std::unordered_map<std::string, Info> dataset_infos = Stream::load_infos(path);
+    //std::unordered_map<std::string, Info> dataset_infos = Stream::load_infos(path);
     
-    Stream stream(path, dataset);
+    SetStream stream(path, dataset);
+    SetStream::Info dataset_infos = stream.get_info();
     
     smc::Algorithm smc_algo;
     smc_algo.setStream(&stream);
     smc_algo.setC(6.f);
     smc_algo.setK(k);
-    smc_algo.setM(dataset_infos[dataset].m);
-    smc_algo.setN(dataset_infos[dataset].n);
+    smc_algo.setM(dataset_infos.m);
+    smc_algo.setN(dataset_infos.n);
+    smc_algo.setMaxSetSize(dataset_infos.max_set_size);
+    //smc_algo.setM(dataset_infos[dataset].m);
+    //smc_algo.setN(dataset_infos[dataset].n);
     smc_algo.setEpsilon(eps);
-    smc_algo.setMaxSetSize(dataset_infos[dataset].max_set_size);
+    //smc_algo.setMaxSetSize(dataset_infos[dataset].max_set_size);
     if      (inde == "full")        smc_algo.setInde(smc::IndeType::FULL);
     else if (inde == "opt")         smc_algo.setInde(smc::IndeType::OPT);
     else if (inde == "pairwise")    smc_algo.setInde(smc::IndeType::PAIRWISE);
@@ -55,15 +59,15 @@ int main(int argc, const char * argv[]) {
     
     smc::Result result = smc_algo.run();
     
-    if (dataset != "chess.dat")
-    {
-        std::cout <<    dataset_infos[dataset].n    << "," <<
-                        dataset_infos[dataset].m    << "," <<
-                        k                           << "," <<
-                        eps                         << "," <<
-                        result                      << "," <<
-                        dataset                     << std::endl;
-    }
+    std::cout <<
+    //dataset_infos[dataset].n    << "," <<
+    //dataset_infos[dataset].m    << "," <<
+    dataset_infos.n << "," <<
+    dataset_infos.m << "," <<
+                    k                           << "," <<
+                    eps                         << "," <<
+                    result                      << "," <<
+                    dataset                     << std::endl;
          
     stream.terminate();
         

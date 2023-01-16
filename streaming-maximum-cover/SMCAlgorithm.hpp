@@ -8,7 +8,7 @@
 #include <chrono>
 #include <iostream>
 
-#include "Stream.hpp"
+#include "SetStream.hpp"
 #include "IndeHashFunction.hpp"
 
 using std::chrono::high_resolution_clock;
@@ -95,7 +95,7 @@ class Algorithm
 {
 public:
     Algorithm();
-    void setStream(Stream* stream)          {this->stream = stream;}
+    void setStream(SetStream* stream)          {this->stream = stream;}
     void setInde(IndeType inde)             {this->inde = inde;}
     void setC(float c)                      {this->c = c;}
     void setEpsilon(float epsilon)          {this->epsilon = epsilon;}
@@ -107,7 +107,7 @@ public:
     Result run();
     
 private:
-    Stream* stream;
+    SetStream* stream;
     IndeType inde;
     float c;
     float epsilon;
