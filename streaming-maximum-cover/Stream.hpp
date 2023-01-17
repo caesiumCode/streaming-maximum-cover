@@ -8,9 +8,8 @@
 #include <unordered_map>
 #include <iostream>
 
-#include <fcntl.h> 
-#include <unistd.h>
-#include <cstring>
+#include <cstdio>
+#include <cstdlib>
 
 struct Info {
     std::string name;
@@ -35,12 +34,10 @@ private:
     int current_id;
     
 private:
-    static const int BUFFER_SIZE = 1024 * 1024;
+    static const int LINE_BUFFER_SIZE = 2 << 18;
     
-    int fd;
-    char buffer[BUFFER_SIZE];
-    char* buffer_iter;
-    ssize_t s;
+    FILE* fp;
+    char line_buffer[LINE_BUFFER_SIZE];
 };
 
 #endif /* Stream_hpp */

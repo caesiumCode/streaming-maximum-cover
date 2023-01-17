@@ -1,7 +1,3 @@
-#include <unordered_map>
-#include <fstream>
-#include <sstream>
-
 #include "SMCAlgorithm.hpp"
 
 /*
@@ -35,10 +31,10 @@ int main(int argc, const char * argv[]) {
         inde    = "opt";
     }
     
-    //std::unordered_map<std::string, Info> dataset_infos = Stream::load_infos(path);
-    std::unordered_map<std::string, SetStream::Info> dataset_infos = SetStream::load_infos(path);
+    std::unordered_map<std::string, Info> dataset_infos = Stream::load_infos(path);
+    //std::unordered_map<std::string, SetStream::Info> dataset_infos = SetStream::load_infos(path);
     
-    SetStream stream(path, dataset);
+    Stream stream(path, dataset);
     
     smc::Algorithm smc_algo;
     smc_algo.setStream(&stream);
