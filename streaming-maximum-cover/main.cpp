@@ -25,7 +25,7 @@ int main(int argc, const char * argv[]) {
     else
     {
         path    = "/Users/stephen/Desktop/Melbourne University/Subjects/S4 - Research Project/Datasets/Datasets/";
-        dataset = "Webbase.dat";
+        dataset = "chess.dat";
         k       = 8;
         eps     = .4f;
         inde    = "opt";
@@ -57,7 +57,7 @@ int main(int argc, const char * argv[]) {
                     eps                         << "," <<
                     result                      << "," <<
                     dataset                     << std::endl;
-         
+    
     stream.terminate();
         
     return 0;

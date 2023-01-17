@@ -51,38 +51,6 @@ bool Stream::read_set(int &id, std::vector<unsigned long>& set)
         else    buffer_iter++;
     }
     
-    /*
-    
-    do
-    {
-        if ((buffer_iter - buffer) == s-1)
-        {
-            s = std::read(fd, buffer, BUFFER_SIZE);
-            buffer_iter = &buffer[0];
-            if (s == 0) return false;
-        }
-        
-        unsigned long x = std::strtoul(buffer_iter, &buffer_iter, 10);
-        
-        if ((buffer_iter - buffer) == s)
-        {
-            s = std::read(fd, buffer, BUFFER_SIZE);
-            buffer_iter = &buffer[0];
-            
-            if (buffer_iter[0] >= '0' && buffer_iter[0] <= '9')
-            {
-                unsigned long x_right = std::strtoul(buffer_iter, &buffer_iter, 10);
-                int x_right_size = int(buffer_iter - buffer);
-                for (int i = 0; i < x_right_size; i++) x *= 10;
-                x += x_right;
-            }
-        }
-        
-        set.push_back(x);
-                
-    } while (buffer_iter[0] != '\n');
-     */
-    
     return true;
 }
 
