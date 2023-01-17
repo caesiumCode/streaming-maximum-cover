@@ -5,7 +5,7 @@
  
     <k>     int     number of sets to select
     <eps>   float   precision parameter
-    <inde>  string  "full", "opt", "pairwise"
+    <inde>  string  "full", "opt", "pairwise", "fullsamp"
  */
 
 int main(int argc, const char * argv[]) {    
@@ -32,7 +32,6 @@ int main(int argc, const char * argv[]) {
     }
     
     std::unordered_map<std::string, Info> dataset_infos = Stream::load_infos(path);
-    //std::unordered_map<std::string, SetStream::Info> dataset_infos = SetStream::load_infos(path);
     
     Stream stream(path, dataset);
     
