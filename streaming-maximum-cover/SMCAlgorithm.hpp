@@ -59,20 +59,22 @@ struct Result
     std::chrono::nanoseconds time_sub;
     std::chrono::nanoseconds time_tot;
     
-    friend std::ostream& operator<<(std::ostream& out, const Result& result)
+    std::string to_string()
     {
-        out << result.indices.size() << ",";
-        out << result.coverage_size << ",";
-        out << result.lambda << ",";
-        out << result.gamma << ",";
-        out << result.inde << ",";
-        out << result.n_passes << ",";
-        out << result.n_guesses << ",";
-        out << result.space << ",";
-        out << duration<double, std::milli>(result.time_sub).count() << ",";
-        out << duration<double, std::milli>(result.time_tot).count();
+        std::string output;
         
-        return out;
+        output += std::to_string(indices.size()) + ",";
+        output += std::to_string(coverage_size) + ",";
+        output += std::to_string(lambda) + ",";
+        output += std::to_string(gamma) + ",";
+        output += inde + ",";
+        output += std::to_string(n_passes) + ",";
+        output += std::to_string(n_guesses) + ",";
+        output += std::to_string(space) + ",";
+        output += std::to_string(duration<double, std::milli>(time_sub).count()) + ",";
+        output += std::to_string(duration<double, std::milli>(time_tot).count());
+        
+        return output;
     }
 };
 

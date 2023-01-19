@@ -25,10 +25,10 @@ int main(int argc, const char * argv[]) {
     else
     {
         path    = "/Users/stephen/Desktop/Melbourne University/Subjects/S4 - Research Project/Datasets/Datasets/";
-        dataset = "chess.dat";
-        k       = 8;
+        dataset = "Webdocs.dat";
+        k       = 1;
         eps     = .4f;
-        inde    = "opt";
+        inde    = "pairwise";
     }
     
     std::unordered_map<std::string, Info> dataset_infos = Stream::load_infos(path);
@@ -51,14 +51,17 @@ int main(int argc, const char * argv[]) {
     
     smc::Result result = smc_algo.run();
     
-    std::cout <<    dataset_infos[dataset].n    << "," <<
-                    dataset_infos[dataset].m    << "," <<
-                    k                           << "," <<
-                    eps                         << "," <<
-                    result                      << "," <<
-                    dataset                     << std::endl;
-    
     stream.terminate();
+    
+    std::string output;
+    output += std::to_string(dataset_infos[dataset].n) + ",";
+    output += std::to_string(dataset_infos[dataset].m) + ",";
+    output += std::to_string(k) + ",";
+    output += std::to_string(eps) + ",";
+    output += result.to_string() + ",";
+    output += dataset + "\n";
+
+    std::cout << output;
         
     return 0;
 }
