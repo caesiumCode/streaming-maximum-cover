@@ -79,7 +79,7 @@ int main(int argc, const char * argv[]) {
             
             smc::MGVAlgorithm mgv_algo;
             mgv_algo.setStream(&stream);
-            mgv_algo.setC(6.f);
+            mgv_algo.setC(1.f);
             mgv_algo.setK(k);
             mgv_algo.setM(m);
             mgv_algo.setN(n);
