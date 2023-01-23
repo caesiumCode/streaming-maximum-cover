@@ -46,8 +46,8 @@ int main(int argc, const char * argv[]) {
             break;
             
         case SG:
-            path    = std::string(argv[1]);
-            dataset = std::string(argv[2]);
+            path    = std::string(argv[2]);
+            dataset = std::string(argv[3]);
             k       = std::atoi(argv[4]);
             break;
             
