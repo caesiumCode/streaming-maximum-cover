@@ -1,9 +1,11 @@
 #include "MGVAlgorithm.hpp"
 #include "SGAlgorithm.hpp"
+#include "YYAlgorithm.hpp"
 
 /*
  ./program mgv <path> <dataset> <k> <eps> <inde>
  ./program sg <path> <dataset> <k>
+ ./program yy <path> <dataset> <k>
  
     <k>     int     number of sets to select
     <eps>   float   precision parameter
@@ -14,7 +16,7 @@ enum ALGO_TYPE
 {
     MGV,
     SG,
-    CUSTOM
+    YY
 };
 
 int main(int argc, const char * argv[]) {
@@ -26,11 +28,11 @@ int main(int argc, const char * argv[]) {
     
     if      (argc == 7 && std::string(argv[1]) == "mgv")    algo_type = ALGO_TYPE::MGV;
     else if (argc == 5 && std::string(argv[1]) == "sg")     algo_type = ALGO_TYPE::SG;
+    else if (argc == 5 && std::string(argv[1]) == "yy")     algo_type = ALGO_TYPE::YY;
     else
     {
-        algo_type = ALGO_TYPE::CUSTOM;
-        //std::cout << "INVALID ARGUMENT\n";
-        //return EXIT_FAILURE;
+        std::cout << "INVALID ARGUMENT\n";
+        return EXIT_FAILURE;
     }
     
     /*
@@ -40,21 +42,11 @@ int main(int argc, const char * argv[]) {
     switch (algo_type)
     {
         case MGV:
-            path    = std::string(argv[2]);
-            dataset = std::string(argv[3]);
-            k       = std::atoi(argv[4]);
-            break;
-            
         case SG:
+        case YY:
             path    = std::string(argv[2]);
             dataset = std::string(argv[3]);
             k       = std::atoi(argv[4]);
-            break;
-            
-        default:
-            path    = "/Users/stephen/Desktop/Melbourne University/Subjects/S4 - Research Project/Datasets/Datasets/";
-            dataset = "Webdocs.dat";
-            k       = 4;
             break;
     }
     
@@ -63,9 +55,7 @@ int main(int argc, const char * argv[]) {
     
     m = dataset_infos[dataset].m;
     n = dataset_infos[dataset].n;
-    
-    //algo_type = ALGO_TYPE::SG;
-    
+        
     /*
      Setup algorithm
      */
@@ -127,36 +117,24 @@ int main(int argc, const char * argv[]) {
             break;
         }
             
-        default:
+        case YY:
         {
-            float       eps     = 0.5;
-            std::string inde    = "pairwise";
+            smc::YYAlgorithm yy_algo;
+            yy_algo.setStream(&stream);
+            yy_algo.setK(k);
             
-            smc::MGVAlgorithm mgv_algo;
-            mgv_algo.setStream(&stream);
-            mgv_algo.setC(6.f);
-            mgv_algo.setK(k);
-            mgv_algo.setM(dataset_infos[dataset].m);
-            mgv_algo.setN(dataset_infos[dataset].n);
-            mgv_algo.setEpsilon(eps);
-            mgv_algo.setMaxSetSize(dataset_infos[dataset].max_set_size);
-            if      (inde == "full")        mgv_algo.setInde(smc::IndeType::FULL);
-            else if (inde == "opt")         mgv_algo.setInde(smc::IndeType::OPT);
-            else if (inde == "pairwise")    mgv_algo.setInde(smc::IndeType::PAIRWISE);
-            else if (inde == "fullsamp")    mgv_algo.setInde(smc::IndeType::FULLSAMP);
-            else                            mgv_algo.setInde(smc::IndeType::FULLSAMP);
-            
-            smc::Result result = mgv_algo.run();
+            smc::Result result = yy_algo.run();
             
             std::string output;
-            output += std::to_string(dataset_infos[dataset].n) + ",";
-            output += std::to_string(dataset_infos[dataset].m) + ",";
+            output += std::to_string(n) + ",";
+            output += std::to_string(m) + ",";
             output += std::to_string(k) + ",";
-            output += std::to_string(eps) + ",";
+            output += std::to_string(0) + ",";
             output += result.to_string() + ",";
             output += dataset + "\n";
             
             std::cout << output;
+            
             break;
         }
     }
