@@ -1,11 +1,13 @@
 #include "MGVAlgorithm.hpp"
 #include "SGAlgorithm.hpp"
 #include "YYAlgorithm.hpp"
+#include "BMKKAlgorithm.hpp"
 
 /*
- ./program mgv <path> <dataset> <k> <eps> <inde>
- ./program sg <path> <dataset> <k>
- ./program yy <path> <dataset> <k>
+ ./program mgv  <path> <dataset> <k> <eps> <inde>
+ ./program sg   <path> <dataset> <k>
+ ./program yy   <path> <dataset> <k>
+ ./program bmkk <path> <dataset> <k> <eps>
  
     <k>     int     number of sets to select
     <eps>   float   precision parameter
@@ -16,7 +18,8 @@ enum ALGO_TYPE
 {
     MGV,
     SG,
-    YY
+    YY,
+    BMKK
 };
 
 int main(int argc, const char * argv[]) {
@@ -29,6 +32,7 @@ int main(int argc, const char * argv[]) {
     if      (argc == 7 && std::string(argv[1]) == "mgv")    algo_type = ALGO_TYPE::MGV;
     else if (argc == 5 && std::string(argv[1]) == "sg")     algo_type = ALGO_TYPE::SG;
     else if (argc == 5 && std::string(argv[1]) == "yy")     algo_type = ALGO_TYPE::YY;
+    else if (argc == 6 && std::string(argv[1]) == "bmkk")   algo_type = ALGO_TYPE::BMKK;
     else
     {
         std::cout << "INVALID ARGUMENT\n";
@@ -44,6 +48,7 @@ int main(int argc, const char * argv[]) {
         case MGV:
         case SG:
         case YY:
+        case BMKK:
             path    = std::string(argv[2]);
             dataset = std::string(argv[3]);
             k       = std::atoi(argv[4]);
@@ -130,6 +135,31 @@ int main(int argc, const char * argv[]) {
             output += std::to_string(m) + ",";
             output += std::to_string(k) + ",";
             output += std::to_string(0) + ",";
+            output += result.to_string() + ",";
+            output += dataset + "\n";
+            
+            std::cout << output;
+            
+            break;
+        }
+            
+        case BMKK:
+        {
+            float eps = std::atof(argv[5]);
+            
+            smc::BMKKAlgorithm bmkk_algo;
+            bmkk_algo.setStream(&stream);
+            bmkk_algo.setK(k);
+            bmkk_algo.setEpsilon(eps);
+            bmkk_algo.setMaxSetSize(dataset_infos[dataset].max_set_size);
+            
+            smc::Result result = bmkk_algo.run();
+            
+            std::string output;
+            output += std::to_string(n) + ",";
+            output += std::to_string(m) + ",";
+            output += std::to_string(k) + ",";
+            output += std::to_string(eps) + ",";
             output += result.to_string() + ",";
             output += dataset + "\n";
             
