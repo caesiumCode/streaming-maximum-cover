@@ -55,7 +55,7 @@ private:
         float threshold;
         
         std::unordered_set<int> I;
-        std::unordered_set<unsigned long> C;
+        std::unordered_set<ulong> C;
     };
 };
 

@@ -162,15 +162,19 @@ Result MGVAlgorithm::run()
     int fst_max_i = max_i;
         
     // Find right guess
+    /*
     for (GuessState& state : guess_states) if (state.C.size() < (1.f - epsilon)*(1.f-1.f/M_E-epsilon)*state.lambda)
         state.wrong = true;
     
     max_i = (int)guess_states.size()-1;
     while (max_i >= 0 && guess_states[max_i].wrong) max_i--;
-    
-    GuessState state;
+    */
+     
+    GuessState state = guess_states[fst_max_i];
+     /*
     if (max_i < 0) state = guess_states[fst_max_i];
     else state = guess_states[max_i];
+     */
         
     auto Tend = high_resolution_clock::now();
 

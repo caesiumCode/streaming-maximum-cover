@@ -3,6 +3,8 @@
 #include "YYAlgorithm.hpp"
 #include "BMKKAlgorithm.hpp"
 
+#include <algorithm>
+
 /*
  ./program mgv  <path> <dataset> <k> <eps> <inde>
  ./program sg   <path> <dataset> <k>
@@ -39,9 +41,8 @@ int main(int argc, const char * argv[]) {
         return EXIT_FAILURE;
     }
     
-    /*
-     Setup stream
-     */
+    
+    //Setup stream
     
     switch (algo_type)
     {
@@ -61,9 +62,7 @@ int main(int argc, const char * argv[]) {
     m = dataset_infos[dataset].m;
     n = dataset_infos[dataset].n;
         
-    /*
-     Setup algorithm
-     */
+    //Setup algorithm
     
     switch (algo_type)
     {

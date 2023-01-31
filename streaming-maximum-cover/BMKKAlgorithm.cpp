@@ -48,7 +48,7 @@ Result BMKKAlgorithm::run()
             
             if (contrib >= threshold)
             {
-                guess.I.push_back(id);
+                guess.I.insert(id);
                 guess.C.insert(set.begin(), set.end());
             }
         }
@@ -57,12 +57,15 @@ Result BMKKAlgorithm::run()
     int best_i = 0;
     for (int i = 1; i < O.size(); i++) if (O[i].C.size() > O[best_i].C.size()) best_i = i;
     
+    GuessState& state = O[best_i];
+    
     auto END = high_resolution_clock::now();
     
-    result.indices = O[best_i].I;
-    result.coverage_size = O[best_i].C.size();
     result.space = 0;
     for (const GuessState& guess : O) result.space += guess.C.size();
+    
+    result.indices = std::vector<int>(state.I.begin(), state.I.end());
+    result.coverage_size = state.C.size();
     result.time_tot = END - START;
     result.type = "BMKK";
     result.time_sub = std::chrono::nanoseconds(0);
