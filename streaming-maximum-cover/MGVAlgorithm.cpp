@@ -163,6 +163,7 @@ Result MGVAlgorithm::run()
     
     // Biggest |I|
     max_i = 0;
+    while (max_i < guess_states.size() && guess_states[max_i].wrong) max_i++;
     for (int i = 0; i < guess_states.size(); i++)
     {
         if (!guess_states[i].wrong && guess_states[i].I.size() >= guess_states[max_i].I.size()) max_i = i;
