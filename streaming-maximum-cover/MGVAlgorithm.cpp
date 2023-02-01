@@ -160,6 +160,13 @@ Result MGVAlgorithm::run()
         }
     }
     int fst_max_i = max_i;
+    
+    // Biggest |I|
+    max_i = 0;
+    for (int i = 0; i < guess_states.size(); i++)
+    {
+        if (!guess_states[i].wrong && guess_states[i].I.size() >= guess_states[max_i].I.size()) max_i = i;
+    }
         
     // Find right guess
     /*
@@ -170,7 +177,7 @@ Result MGVAlgorithm::run()
     while (max_i >= 0 && guess_states[max_i].wrong) max_i--;
     */
      
-    GuessState state = guess_states[fst_max_i];
+    GuessState state = guess_states[max_i];
      /*
     if (max_i < 0) state = guess_states[fst_max_i];
     else state = guess_states[max_i];
