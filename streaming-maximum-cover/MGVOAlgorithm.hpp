@@ -49,7 +49,7 @@ private:
         
         std::unordered_set<int> I;
         std::unordered_set<ulong> C;
-        std::vector<std::vector<ulong>> W;
+        std::vector<std::pair<int, std::vector<ulong>>> W;
     };
 };
 

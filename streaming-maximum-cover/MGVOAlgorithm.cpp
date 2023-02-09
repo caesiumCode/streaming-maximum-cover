@@ -126,9 +126,9 @@ Result MGVOAlgorithm::run()
                 state.I.insert(id);
                 for (unsigned long x : sub_set) state.C.insert(x);
             }
-            else
+            else if (state.I.size() < k)
             {
-                state.W.push_back(sub_set);
+                state.W.push_back({id, sub_set});
                 state.n_elements += sub_set.size();
             }
             
@@ -157,10 +157,10 @@ Result MGVOAlgorithm::run()
         {
             i_max = 0;
             contribution_max = 0;
-            for (int i = 0; i < state.W[i].size(); i++)
+            for (int i = 0; i < state.W.size(); i++)
             {
                 int contribution = 0;
-                for (ulong x : state.W[i]) if (!state.C.contains(x)) contribution++;
+                for (ulong x : state.W[i].second) if (!state.C.contains(x)) contribution++;
                 
                 if (contribution > contribution_max)
                 {
@@ -169,15 +169,14 @@ Result MGVOAlgorithm::run()
                 }
             }
             
-            state.C.insert(state.W[i_max].begin(), state.W[i_max].end());
-            state.I.insert(i_max);
+            state.C.insert(state.W[i_max].second.begin(), state.W[i_max].second.end());
+            state.I.insert(state.W[i_max].first);
             
             // Termination conditions
             if (state.C.size() > state.z)
             {
                 state.wrong = true;
                 state.active = false;
-                activity--;
             }
         }
     }
