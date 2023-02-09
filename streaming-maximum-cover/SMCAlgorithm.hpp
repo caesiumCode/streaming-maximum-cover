@@ -23,6 +23,13 @@ using ulong = unsigned long;
 namespace smc
 {
 
+enum IndeType {
+    FULL,
+    OPT,
+    PAIRWISE,
+    FULLSAMP
+};
+
 struct Result
 {
     Result()

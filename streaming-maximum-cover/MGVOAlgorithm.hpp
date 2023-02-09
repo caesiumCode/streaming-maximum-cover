@@ -1,5 +1,5 @@
-#ifndef MGVAlgorithm_hpp
-#define MGVAlgorithm_hpp
+#ifndef MGVOAlgorithm_hpp
+#define MGVOAlgorithm_hpp
 
 #include "SMCAlgorithm.hpp"
 
@@ -8,11 +8,11 @@
 namespace smc
 {
 
-class MGVAlgorithm : public Algorithm
+class MGVOAlgorithm : public Algorithm
 {
 public:
-    MGVAlgorithm();
-    virtual ~MGVAlgorithm();
+    MGVOAlgorithm();
+    virtual ~MGVOAlgorithm();
     
    virtual void setStream(Stream* stream)   {this->stream = stream;}
     void setInde(IndeType inde)             {this->inde = inde;}
@@ -49,9 +49,10 @@ private:
         
         std::unordered_set<int> I;
         std::unordered_set<ulong> C;
+        std::vector<std::vector<ulong>> W;
     };
 };
 
 }
 
-#endif /* MGVAlgorithm_hpp */
+#endif /* MGVOAlgorithm_hpp */

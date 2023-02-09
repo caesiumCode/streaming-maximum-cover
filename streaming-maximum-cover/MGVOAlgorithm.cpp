@@ -3,21 +3,21 @@
  https://link.springer.com/article/10.1007/s00224-018-9878-x
  */
 
-#include "MGVAlgorithm.hpp"
+#include "MGVOAlgorithm.hpp"
 
 using namespace smc;
 
-MGVAlgorithm::MGVAlgorithm()
+MGVOAlgorithm::MGVOAlgorithm()
 {
     
 }
 
-MGVAlgorithm::~MGVAlgorithm()
+MGVOAlgorithm::~MGVOAlgorithm()
 {
     
 }
 
-Result MGVAlgorithm::run()
+Result MGVOAlgorithm::run()
 {
     auto Tstart = high_resolution_clock::now();
     
@@ -28,28 +28,28 @@ Result MGVAlgorithm::run()
         case IndeType::FULL:
             gamma = std::ceil(2.f * c * float(k) * std::log(m) / (epsilon * epsilon));
             gamma = std::max(2, gamma);
-            result.type = "MGVU-full";
+            result.type = "MGVUO-full";
             break;
             
         case IndeType::OPT:
             gamma = std::ceil(c * float(k) * std::log(m) / 3.f);
             gamma = std::max(2, gamma);
-            result.type = "MGVU-opt";
+            result.type = "MGVUO-opt";
             break;
             
         case IndeType::PAIRWISE:
             gamma = 2;
-            result.type = "MGVU-pairwise";
+            result.type = "MGVUO-pairwise";
             break;
             
         case IndeType::FULLSAMP:
             gamma = 0;
-            result.type = "MGVU-fullsamp";
+            result.type = "MGVUO-fullsamp";
             break;
             
         default:
             gamma = 0;
-            result.type = "MGVU-fullsamp";
+            result.type = "MGVUO-fullsamp";
             break;
     }
     IndeHashFunction hash(gamma);
@@ -82,70 +82,106 @@ Result MGVAlgorithm::run()
         
         state.I.clear();
         state.C.clear();
+        state.W.clear();
     }
         
     /*
      Thresholding
      */
-    int j_max = 1 + std::ceil(std::log(4.f * M_E) / std::log(1.f + epsilon));
-    for (int j = 1; activity > 0 && j <= j_max; j++)
-    {        
-        stream->reset();
-        int id;
-        std::vector<unsigned long> set;
-        while (activity > 0 && stream->read_set(id, set))
+    stream->reset();
+    int id;
+    std::vector<unsigned long> set;
+    while (activity > 0 && stream->read_set(id, set))
+    {
+        if (inde != IndeType::FULLSAMP)
         {
-            if (inde != IndeType::FULLSAMP)
-            {
-                auto T1 = high_resolution_clock::now();
-                hash.pre_evaluate(set);
-                auto T2 = high_resolution_clock::now();
-                result.time_sub += T2 - T1;
-            }
+            auto T1 = high_resolution_clock::now();
+            hash.pre_evaluate(set);
+            auto T2 = high_resolution_clock::now();
+            result.time_sub += T2 - T1;
+        }
 
-            // Iterate over guesses
-            for (GuessState& state : guess_states) if (state.active && !state.I.contains(id))
+        // Iterate over guesses
+        for (GuessState& state : guess_states) if (state.active && !state.I.contains(id))
+        {
+            // Calculate S\C
+            std::vector<unsigned long> sub_set;
+            if (state.lambda < state.v)
             {
-                // Calculate S\C
-                std::vector<unsigned long> sub_set;
-                if (state.lambda < state.v)
+                for (int i = 0; i < set.size(); i++) if (!state.C.contains(set[i]))
                 {
-                    for (int i = 0; i < set.size(); i++) if (!state.C.contains(set[i]))
-                    {
-                        auto T1 = high_resolution_clock::now();
-                        unsigned long hx = hash.post_evaluate(i);
-                        if ((hx % state.v) < state.lambda) sub_set.push_back(set[i]);
-                        auto T2 = high_resolution_clock::now();
-                        
-                        result.time_sub += T2 - T1;
-                    }
+                    auto T1 = high_resolution_clock::now();
+                    unsigned long hx = hash.post_evaluate(i);
+                    if ((hx % state.v) < state.lambda) sub_set.push_back(set[i]);
+                    auto T2 = high_resolution_clock::now();
+                    
+                    result.time_sub += T2 - T1;
                 }
-                else for (unsigned long x : set) if (!state.C.contains(x)) sub_set.push_back(x);
-                
-                // Check contribution
-                if (sub_set.size() >= state.threshold && state.I.size() < k)
-                {
-                    state.I.insert(id);
-                    for (unsigned long x : sub_set) state.C.insert(x);
-                }
-                
-                // Termination conditions
-                if (state.C.size() > state.z)
-                {
-                    state.wrong = true;
-                    state.active = false;
-                    activity--;
-                }
-                else if (state.I.size() >= k)
-                {
-                    state.active = false;
-                    activity--;
-                }
+            }
+            else for (unsigned long x : set) if (!state.C.contains(x)) sub_set.push_back(x);
+            
+            // Check contribution
+            if (sub_set.size() >= state.threshold && state.I.size() < k)
+            {
+                state.I.insert(id);
+                for (unsigned long x : sub_set) state.C.insert(x);
+            }
+            else
+            {
+                state.W.push_back(sub_set);
+                state.n_elements += sub_set.size();
+            }
+            
+            // Termination conditions
+            if (state.C.size() > state.z)
+            {
+                state.wrong = true;
+                state.active = false;
+                activity--;
+            }
+            else if (state.I.size() >= k)
+            {
+                state.active = false;
+                activity--;
             }
         }
-        
-        for (GuessState& state : guess_states) state.threshold /= 1.f + epsilon;
     }
+    
+    // Greedy algorithm
+    for (GuessState& state : guess_states)
+    {
+        int i_max = 0;
+        int contribution_max = -1;
+        
+        while (state.active && state.I.size() < k && state.I.size() < m && contribution_max != 0)
+        {
+            i_max = 0;
+            contribution_max = 0;
+            for (int i = 0; i < state.W[i].size(); i++)
+            {
+                int contribution = 0;
+                for (ulong x : state.W[i]) if (!state.C.contains(x)) contribution++;
+                
+                if (contribution > contribution_max)
+                {
+                    i_max = i;
+                    contribution_max = contribution;
+                }
+            }
+            
+            state.C.insert(state.W[i_max].begin(), state.W[i_max].end());
+            state.I.insert(i_max);
+            
+            // Termination conditions
+            if (state.C.size() > state.z)
+            {
+                state.wrong = true;
+                state.active = false;
+                activity--;
+            }
+        }
+    }
+        
         
     // Fisrt estimate
     int max_i = 0;
@@ -191,7 +227,7 @@ Result MGVAlgorithm::run()
     result.coverage_size = (int)true_C.size();
     result.time_tot = Tend - Tstart;
     result.space = 0;
-    for (const GuessState& state : guess_states) result.space += state.C.size();
+    for (const GuessState& state : guess_states) result.space += state.C.size() + state.n_elements;
     
     return result;
 }

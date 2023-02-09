@@ -1,4 +1,5 @@
 #include "MGVAlgorithm.hpp"
+#include "MGVOAlgorithm.hpp"
 #include "SGAlgorithm.hpp"
 #include "YYAlgorithm.hpp"
 #include "BMKKAlgorithm.hpp"
@@ -19,6 +20,7 @@
 enum ALGO_TYPE
 {
     MGV,
+    MGVO,
     SG,
     YY,
     BMKK
@@ -32,6 +34,7 @@ int main(int argc, const char * argv[]) {
     ulong n;
     
     if      (argc == 7 && std::string(argv[1]) == "mgv")    algo_type = ALGO_TYPE::MGV;
+    else if (argc == 7 && std::string(argv[1]) == "mgvo")   algo_type = ALGO_TYPE::MGVO;
     else if (argc == 5 && std::string(argv[1]) == "sg")     algo_type = ALGO_TYPE::SG;
     else if (argc == 5 && std::string(argv[1]) == "yy")     algo_type = ALGO_TYPE::YY;
     else if (argc == 6 && std::string(argv[1]) == "bmkk")   algo_type = ALGO_TYPE::BMKK;
@@ -47,6 +50,7 @@ int main(int argc, const char * argv[]) {
     switch (algo_type)
     {
         case MGV:
+        case MGVO:
         case SG:
         case YY:
         case BMKK:
@@ -86,6 +90,40 @@ int main(int argc, const char * argv[]) {
             else                            mgv_algo.setInde(smc::IndeType::FULLSAMP);
             
             smc::Result result = mgv_algo.run();
+            
+            std::string output;
+            output += std::to_string(n) + ",";
+            output += std::to_string(m) + ",";
+            output += std::to_string(k) + ",";
+            output += std::to_string(eps) + ",";
+            output += result.to_string() + ",";
+            output += dataset + "\n";
+            
+            std::cout << output;
+            
+            break;
+        }
+            
+        case MGVO:
+        {
+            float       eps     = std::atof(argv[5]);
+            std::string inde    = std::string(argv[6]);
+            
+            smc::MGVOAlgorithm mgvo_algo;
+            mgvo_algo.setStream(&stream);
+            mgvo_algo.setC(1.f);
+            mgvo_algo.setK(k);
+            mgvo_algo.setM(m);
+            mgvo_algo.setN(n);
+            mgvo_algo.setEpsilon(eps);
+            mgvo_algo.setMaxSetSize(dataset_infos[dataset].max_set_size);
+            if      (inde == "full")        mgvo_algo.setInde(smc::IndeType::FULL);
+            else if (inde == "opt")         mgvo_algo.setInde(smc::IndeType::OPT);
+            else if (inde == "pairwise")    mgvo_algo.setInde(smc::IndeType::PAIRWISE);
+            else if (inde == "fullsamp")    mgvo_algo.setInde(smc::IndeType::FULLSAMP);
+            else                            mgvo_algo.setInde(smc::IndeType::FULLSAMP);
+            
+            smc::Result result = mgvo_algo.run();
             
             std::string output;
             output += std::to_string(n) + ",";
