@@ -3,6 +3,7 @@
 #include "SGAlgorithm.hpp"
 #include "YYAlgorithm.hpp"
 #include "BMKKAlgorithm.hpp"
+#include "AJSAAOAlgorithm.hpp"
 
 #include <algorithm>
 
@@ -23,7 +24,8 @@ enum ALGO_TYPE
     MGVO,
     SG,
     YY,
-    BMKK
+    BMKK,
+    AJSAAO
 };
 
 int main(int argc, const char * argv[]) {
@@ -38,6 +40,7 @@ int main(int argc, const char * argv[]) {
     else if (argc == 5 && std::string(argv[1]) == "sg")     algo_type = ALGO_TYPE::SG;
     else if (argc == 5 && std::string(argv[1]) == "yy")     algo_type = ALGO_TYPE::YY;
     else if (argc == 6 && std::string(argv[1]) == "bmkk")   algo_type = ALGO_TYPE::BMKK;
+    else if (argc == 6 && std::string(argv[1]) == "ajsaao") algo_type = ALGO_TYPE::AJSAAO;
     else
     {
         std::cout << "INVALID ARGUMENT\n";
@@ -54,6 +57,7 @@ int main(int argc, const char * argv[]) {
         case SG:
         case YY:
         case BMKK:
+        case AJSAAO:
             path    = std::string(argv[2]);
             dataset = std::string(argv[3]);
             k       = std::atoi(argv[4]);
@@ -191,6 +195,31 @@ int main(int argc, const char * argv[]) {
             bmkk_algo.setMaxSetSize(dataset_infos[dataset].max_set_size);
             
             smc::Result result = bmkk_algo.run();
+            
+            std::string output;
+            output += std::to_string(n) + ",";
+            output += std::to_string(m) + ",";
+            output += std::to_string(k) + ",";
+            output += std::to_string(eps) + ",";
+            output += result.to_string() + ",";
+            output += dataset + "\n";
+            
+            std::cout << output;
+            
+            break;
+        }
+            
+        case AJSAAO:
+        {
+            float eps = std::atof(argv[5]);
+            
+            smc::AJSAAOAlgorithm ajsaao_algo;
+            ajsaao_algo.setStream(&stream);
+            ajsaao_algo.setK(k);
+            ajsaao_algo.setEpsilon(eps);
+            ajsaao_algo.setMaxSetSize(dataset_infos[dataset].max_set_size);
+            
+            smc::Result result = ajsaao_algo.run();
             
             std::string output;
             output += std::to_string(n) + ",";
