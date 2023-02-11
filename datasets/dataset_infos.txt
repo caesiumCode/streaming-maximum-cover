@@ -1,0 +1,4 @@
+name 			size 		m 		n 		max
+chess.dat 		330970 		3196 		75		37
+
+
