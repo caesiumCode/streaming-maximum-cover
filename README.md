@@ -52,7 +52,7 @@ The possible values for ```<inde>``` are
 | ```opt``` | $\gamma = \lfloor k \log m / 3\rfloor$ |
 | ```pairwise``` | $\gamma = 2$ |
 
-For more detail regarding the independence factor $\gamma$, refer to our work (still in review process) or the work of [McGregor and Vu](https://link.springer.com/article/10.1007/s00224-018-9878-x).
+For more detail regarding the independence factor $\gamma$, refer to our work (under review) or the work of [McGregor and Vu](https://link.springer.com/article/10.1007/s00224-018-9878-x).
 
 
 # Output
