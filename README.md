@@ -60,4 +60,4 @@ The output consists of one line
 
 ```<n>,<m>,<k>,<eps>,<algo>-<inde>,<|I|>,<|C|>,<space>,<subsampling time (ms)>,<total time (ms)>,<dataset name>```
     
-$|I|$ is the number of sets selected by the algorithm and $|C| = \cup_{i \in I} S_i$ is the coverage size of the solution. *space* evaluates the space complexity of the algorithm, it is the number of element instances stored during the execution.
+$|I|$ is the number of sets selected by the algorithm and $|C| = \cup_{i \in I} |S_i|$ is the coverage size of the solution. *space* evaluates the space complexity of the algorithm, it is the number of element instances stored during the execution.
