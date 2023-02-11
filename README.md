@@ -1,5 +1,5 @@
 # streaming-maximum-cover
-Given and integer $k$ and a family of $m$ sets $\{S_1, \dots, S_m\}$ where $S_i \in [n]$, the ***Maximum Coverage Problem*** consists of finding $k$ sets whose union has largest cardinality. In the work of my co-authors and I (under review), I implemented several streaming algorithms for the ***Maximum Coverage Problem***. *Name* refers to the names used in our work (under review) and *Codename* refers to the codename used for executing the program:
+Given and integer $k$ and a family of $m$ sets $\{S_1, \dots, S_m\}$ where $S_i \in [n]$, the ***Maximum Coverage Problem*** consists of finding $k$ sets whose union has largest cardinality. I implemented several streaming algorithms for the ***Maximum Coverage Problem***, referred to in a paper I co-authored (under review). *Name* refers to the names used in our work (under review) and *Codename* refers to the codename used for executing the program:
 
 | Authors | Name | Codename |
 | - | - | - |
