@@ -10,10 +10,10 @@ class AJSAAOAlgorithm : public Algorithm
 {
 public:
     AJSAAOAlgorithm();
-    virtual ~AJSAAOAlgorithm();
+    ~AJSAAOAlgorithm();
     
-    virtual void setStream(Stream* stream)  {this->stream = stream;}
-    virtual void setK(int k)                {this->k = k;}
+    void setStream(Stream* stream)          {this->stream = stream;}
+    void setK(int k)                        {this->k = k;}
     void setMaxSetSize(int max_set_size)    {this->max_set_size = max_set_size;}
     void setEpsilon(float epsilon)          {this->epsilon = 9.f*epsilon/5.f;}
     void setM(int m)                        {this->m = m;}

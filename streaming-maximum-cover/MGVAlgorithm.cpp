@@ -23,6 +23,7 @@ Result MGVAlgorithm::run()
     
     Result result;
     
+    // Set independence factor
     int gamma;
     switch (inde) {
         case IndeType::FULL:
@@ -55,9 +56,9 @@ Result MGVAlgorithm::run()
     IndeHashFunction hash(gamma);
     int activity = 0;
         
-    /*
-     Set guesses
-     */
+    
+    // Set guesses
+    
     std::vector<GuessState> guess_states;
     unsigned long v = max_set_size/2;
     while (v <= max_set_size*k && v <= n)
@@ -83,10 +84,10 @@ Result MGVAlgorithm::run()
         state.I.clear();
         state.C.clear();
     }
-        
-    /*
-     Thresholding
-     */
+    
+    
+    // Thresholding
+    
     int j_max = 1 + std::ceil(std::log(4.f * M_E) / std::log(1.f + epsilon));
     for (int j = 1; activity > 0 && j <= j_max; j++)
     {        
@@ -147,7 +148,7 @@ Result MGVAlgorithm::run()
         for (GuessState& state : guess_states) state.threshold /= 1.f + epsilon;
     }
         
-    // Fisrt estimate
+    // First estimate for best guess
     int max_i = 0;
     double max_p = guess_states[max_i].lambda / double(guess_states[max_i].v);
     for (int i = 0; i < guess_states.size(); i++)
@@ -173,6 +174,8 @@ Result MGVAlgorithm::run()
     else            state = guess_states[max_i];
         
     auto Tend = high_resolution_clock::now();
+    
+    // Calculate exact coverage
 
     std::set<unsigned long> true_C;
     
@@ -185,6 +188,8 @@ Result MGVAlgorithm::run()
         while (stream->read_set(id, set)) if (state.I.contains(id)) true_C.insert(set.begin(), set.end());
     }
     else true_C.insert(state.C.begin(), state.C.end());
+    
+    // Result
     
     result.indices.clear();
     for (int x : state.I) result.indices.push_back(x);

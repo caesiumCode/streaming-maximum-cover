@@ -5,19 +5,6 @@
 #include "BMKKAlgorithm.hpp"
 #include "AJSAAOAlgorithm.hpp"
 
-#include <algorithm>
-
-/*
- ./program mgv  <path> <dataset> <k> <eps> <inde>
- ./program sg   <path> <dataset> <k>
- ./program yy   <path> <dataset> <k>
- ./program bmkk <path> <dataset> <k> <eps>
- 
-    <k>     int     number of sets to select
-    <eps>   float   precision parameter
-    <inde>  string  "full", "opt", "pairwise", "fullsamp"
- */
-
 enum ALGO_TYPE
 {
     MGV,

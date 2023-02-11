@@ -10,12 +10,12 @@ class SGAlgorithm : public Algorithm
 {
 public:
     SGAlgorithm();
-    virtual ~SGAlgorithm();
+    ~SGAlgorithm();
     
-    virtual void setStream(Stream* stream)  {this->stream = stream;}
-    virtual void setK(int k)                {this->k = k;}
+    void setStream(Stream* stream)  {this->stream = stream;}
+    void setK(int k)                {this->k = k;}
     
-    virtual Result run();
+    Result run();
     
 private:
     Stream* stream;

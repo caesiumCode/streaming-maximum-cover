@@ -11,6 +11,7 @@
 #include <iostream>
 #include <memory>
 #include <random>
+#include <algorithm>
 
 #include "Stream.hpp"
 
@@ -30,6 +31,9 @@ enum IndeType {
     FULLSAMP
 };
 
+/*
+ Structure returned by all algorithms
+ */
 struct Result
 {
     Result()
@@ -70,6 +74,9 @@ struct Result
     }
 };
 
+/*
+ Base class for a maximum coverage streaming algorithm
+ */
 class Algorithm
 {
 public:

@@ -10,12 +10,12 @@ class YYAlgorithm : public Algorithm
 {
 public:
     YYAlgorithm();
-    virtual ~YYAlgorithm();
+    ~YYAlgorithm();
     
-    virtual void setStream(Stream* stream)  {this->stream = stream;}
-    virtual void setK(int k)                {this->k = k;}
+    void setStream(Stream* stream)  {this->stream = stream;}
+    void setK(int k)                {this->k = k;}
     
-    virtual Result run();
+    Result run();
     
 private:
     Stream* stream;

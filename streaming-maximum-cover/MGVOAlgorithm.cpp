@@ -23,6 +23,7 @@ Result MGVOAlgorithm::run()
     
     Result result;
     
+    // Set independence factor
     int gamma;
     switch (inde) {
         case IndeType::FULL:
@@ -55,9 +56,8 @@ Result MGVOAlgorithm::run()
     IndeHashFunction hash(gamma);
     int activity = 0;
         
-    /*
-     Set guesses
-     */
+    
+    // Set guesses
     std::vector<GuessState> guess_states;
     unsigned long v = max_set_size/2;
     while (v <= max_set_size*k && v <= n)
@@ -85,9 +85,8 @@ Result MGVOAlgorithm::run()
         state.W.clear();
     }
         
-    /*
-     Thresholding
-     */
+    
+    // One pass
     stream->reset();
     int id;
     std::vector<unsigned long> set;
@@ -182,7 +181,7 @@ Result MGVOAlgorithm::run()
     }
         
         
-    // Fisrt estimate
+    // First estimate of the right guess
     int max_i = 0;
     double max_p = guess_states[max_i].lambda / double(guess_states[max_i].v);
     for (int i = 0; i < guess_states.size(); i++)
@@ -208,6 +207,9 @@ Result MGVOAlgorithm::run()
     else            state = guess_states[max_i];
         
     auto Tend = high_resolution_clock::now();
+    
+    
+    // Calculate exact coverage
 
     std::set<unsigned long> true_C;
     
@@ -220,6 +222,8 @@ Result MGVOAlgorithm::run()
         while (stream->read_set(id, set)) if (state.I.contains(id)) true_C.insert(set.begin(), set.end());
     }
     else true_C.insert(state.C.begin(), state.C.end());
+    
+    // Result
     
     result.indices.clear();
     for (int x : state.I) result.indices.push_back(x);

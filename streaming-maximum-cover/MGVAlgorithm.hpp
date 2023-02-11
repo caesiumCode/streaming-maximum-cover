@@ -12,18 +12,18 @@ class MGVAlgorithm : public Algorithm
 {
 public:
     MGVAlgorithm();
-    virtual ~MGVAlgorithm();
+    ~MGVAlgorithm();
     
-   virtual void setStream(Stream* stream)   {this->stream = stream;}
+    void setStream(Stream* stream)          {this->stream = stream;}
+    void setK(int k)                        {this->k = k;}
     void setInde(IndeType inde)             {this->inde = inde;}
     void setC(float c)                      {this->c = c;}
     void setEpsilon(float epsilon)          {this->epsilon = epsilon;}
-    virtual void setK(int k)                {this->k = k;}
     void setM(int m)                        {this->m = m;}
     void setN(ulong n)                      {this->n = n;}
     void setMaxSetSize(int max_set_size)    {this->max_set_size = max_set_size;}
     
-    virtual Result run();
+    Result run();
     
 private:
     Stream* stream;

@@ -23,6 +23,8 @@ Result BMKKAlgorithm::run()
     
     auto START = high_resolution_clock::now();
     
+    // Generate guesses
+    
     std::vector<GuessState> O;
     float min_v = 1;
     while (min_v < max_set_size) min_v *= 1+epsilon;
@@ -35,6 +37,7 @@ Result BMKKAlgorithm::run()
         O.back().I.clear();
     }
     
+    // One pass
     stream->reset();
     int id;
     std::vector<ulong> set;
@@ -54,12 +57,15 @@ Result BMKKAlgorithm::run()
         }
     }
     
+    // Find best guess
     int best_i = 0;
     for (int i = 1; i < O.size(); i++) if (O[i].C.size() > O[best_i].C.size()) best_i = i;
     
-    GuessState& state = O[best_i];
+    const GuessState& state = O[best_i];
     
     auto END = high_resolution_clock::now();
+    
+    // Result
     
     result.space = 0;
     for (const GuessState& guess : O) result.space += guess.C.size();
