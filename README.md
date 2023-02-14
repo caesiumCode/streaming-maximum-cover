@@ -1,9 +1,9 @@
 # streaming-maximum-cover
-Given and integer $k$ and a family of $m$ sets $\{S_1, \dots, S_m\}$ where $S_i \in [n]$, the ***Maximum Coverage Problem*** consists of finding $k$ sets whose union has largest cardinality. I implemented several streaming algorithms for the ***Maximum Coverage Problem***, referred to in a paper I co-authored (under review). *Name* refers to the names used in our work (under review) and *Codename* refers to the codename used for executing the program:
+Given and integer $k$ and a family of $m$ sets $\{S_1, \dots, S_m\}$ where $S_i \in [n]$, the ***Maximum Coverage Problem*** consists of finding $k$ sets whose union has largest cardinality. I implemented several streaming algorithms for the ***Maximum Coverage Problem***, referred to in a paper I co-authored ([paper](https://arxiv.org/abs/2302.06137)). *Name* refers to the names used in our work and *Codename* refers to the codename used for executing the program:
 
 | Authors | Name | Codename |
 | - | - | - |
-| Jaud, Wirth and Choudhury | $\mathbf{MACH}_\gamma'$ | ```mgv``` |
+| [Jaud, Wirth and Choudhury](https://arxiv.org/abs/2302.06137) | $\mathbf{MACH}_\gamma'$ | ```mgv``` |
 | [McGregor and Vu](https://link.springer.com/article/10.1007/s00224-018-9878-x) | $\mathbf{OP}$ | ```mgvo``` |
 | [Saha and Getoor](https://epubs.siam.org/doi/10.1137/1.9781611972795.60) | $\mathbf{SG}$ | ```sg``` |
 | [Yu and Yuan](https://epubs.siam.org/doi/10.1137/1.9781611972832.84) | $\mathbf{YY}$ | ```yy``` |
@@ -52,7 +52,7 @@ The possible values for ```<inde>``` are
 | ```opt``` | $\gamma = \lfloor k \log m / 3\rfloor$ |
 | ```pairwise``` | $\gamma = 2$ |
 
-For more detail regarding the independence factor $\gamma$, refer to our work (under review) or the work of [McGregor and Vu](https://link.springer.com/article/10.1007/s00224-018-9878-x).
+For more detail regarding the independence factor $\gamma$, refer to [our work](https://arxiv.org/abs/2302.06137) or the work of [McGregor and Vu](https://link.springer.com/article/10.1007/s00224-018-9878-x).
 
 
 # Output
